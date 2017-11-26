@@ -45,7 +45,17 @@ def kill_bad(pop, kids):
     fitness = get_fitness(F(pop['DNA']))    # calculate global fitness
     idx = np.arange(pop['DNA'].shape[0])
     good_idx = idx[fitness.argsort()][-POP_SIZE:] # selected by fitness ranking(not value)
+    for key in ['NDA', 'mut_strength']:
+        pop[key] = pop[key][good_idx]
 
+    return pop
+
+
+pop = dict(DNA=5*np.random.rand(1, DNA_SIZE).repeat(POP_SIZE, axis=0),      # initialize the pop DNA values
+        mut_strength=np.random.rand(POP_SIZE, DNA_SIZE))        # initialize the pip mutation strength values
+
+plt.ion()
+x
 
 
 
