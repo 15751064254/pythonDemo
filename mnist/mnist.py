@@ -125,7 +125,15 @@ def training(loss, learning_rate):
     return train_op
 
 def evaluation(logits, labels):
-    """
+    """ Evaluate the quality of the logits at predicting the label.
+    Args:
+        logits: Logits tensor, float - [batch_size, NUM_CLASSES].
+        labels: Labels tensor, int32 - [batch_size], with values int the
+            range[0, NUM_CLASSES].
+
+    Returns:
+        A scalar int32 tensor with the number of example (out of batch_size)
+        that were predicted correctly
     """
 
     # For a classifier model, we can use the in_top_k OP.
