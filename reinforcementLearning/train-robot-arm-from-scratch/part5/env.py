@@ -53,7 +53,7 @@ class ArmEnv(object):
         self.on_goal = 0
         (a1l, a2l) = self.arm_info['l']     # radius, arm length
         (a1r, a2r) = self.arm_info['r']     # radian, angle
-        alxy = np.array([200., 200.])       # a1 start(x0, y0)
+        a1xy = np.array([200., 200.])       # a1 start(x0, y0)
         a1xy_ = np.array([np.cos(a1r), np.sin(a1r)]) * a1l + a1xy   # a1 end and a2 start (x1, y1)
         finger = np.array([np.cos(a1r + a2r), np.sin(a1r + a2r)]) * a2l + a1xy_    # a2 end (x2, y2)
 

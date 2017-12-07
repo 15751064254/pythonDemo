@@ -4,7 +4,7 @@ import numpy as np
 LR_A = 0.001    # learning rate for actor
 LR_C = 0.001    # learning rate for critic
 GAMMA = 0.9     # reward discount
-TAU = 0.1       # soft replacement
+TAU = 0.01       # soft replacement
 MEMORY_CAPACITY = 10000
 BATCH_SIZE = 32
 
@@ -23,7 +23,7 @@ class DDPG(object):
 
         with tf.variable_scope('Actor'):
             self.a = self._build_a(self.S, scope='eval', trainable=True)
-            a_ = self._build_a(self.S_, scope='target', trainable=True)
+            a_ = self._build_a(self.S_, scope='target', trainable=False)
         with tf.variable_scope('Critic'):
             # assign self.a = a in memory when calculating q for td_error,
             # otherwise the self.a is from Actor when updating Actor
@@ -33,8 +33,8 @@ class DDPG(object):
         # networks parameters
         self.ae_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Actor/eval')
         self.at_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Actor/target')
-        self.ce_params = tf.get_collection(tf.GrapKeys.GLOBAL_VARIABLES, scope='Critic/eval')
-        self.ct_params = tf.Get_collection(tf.GrapKeys. GLOBAL_VARIABLES, scope='Critic/target')
+        self.ce_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Critic/eval')
+        self.ct_params = tf.get_collection(tf.GraphKeys. GLOBAL_VARIABLES, scope='Critic/target')
 
         # target net replacement
         self.soft_replace = [[tf.assign(ta, (1 - TAU) * ta + TAU * ea), tf.assign(tc, (1 - TAU) * tc + TAU * ec)] for ta, ea, tc, ec in zip(self.at_params, self.ae_params, self.ct_params, self.ce_params)]
@@ -42,12 +42,12 @@ class DDPG(object):
         q_target = self.R + GAMMA * q_
         # in the feed_dic for the td_error, the self.a should change to actions in memory
         td_error = tf.losses.mean_squared_error(labels=q_target, predictions=q)
-        self.ctrain = tf.train.AdamOptionmizer(LR_C).minimize(td_error, var_list=self.ce_params)
+        self.ctrain = tf.train.AdamOptimizer(LR_C).minimize(td_error, var_list=self.ce_params)
 
         a_loss = - tf.reduce_mean(q)    # maximize the q
         self.atrain = tf.train.AdamOptimizer(LR_A).minimize(a_loss, var_list=self.ae_params)
 
-        self.sess.run(tf.global_bariables_initializer())
+        self.sess.run(tf.global_variables_initializer())
 
 
     def choose_action(self, s):
@@ -59,7 +59,7 @@ class DDPG(object):
         self.sess.run(self.soft_replace)
 
         indices = np.random.choice(MEMORY_CAPACITY, size=BATCH_SIZE)
-        bt = self.memory[ndices, :]
+        bt = self.memory[indices, :]
         bs = bt[:, :self.s_dim]
         ba = bt[:, self.s_dim: self.s_dim + self.a_dim]
         br = bt[:, -self.s_dim -1: -self.s_dim]
@@ -84,23 +84,23 @@ class DDPG(object):
             return tf.multiply(a, self.a_bound, name='scaled_a')
 
 
-    def __build_c(self, s, a, scope, trainable):
+    def _build_c(self, s, a, scope, trainable):
         with tf.variable_scope(scope):
             n_l1 = 100
             w1_s = tf.get_variable('w1_s', [self.s_dim, n_l1], trainable=trainable)
-            w1_a = tf.get_bariable('w1_a', [self.a_dim, n_l1], trainable=trainable)
+            w1_a = tf.get_variable('w1_a', [self.a_dim, n_l1], trainable=trainable)
             b1 = tf.get_variable('b1', [1, n_l1], trainable=trainable)
             net = tf.nn.relu(tf.matmul(s, w1_s) + tf.matmul(a, w1_a) + b1)
             return tf.layers.dense(net, 1, trainable=trainable) # Q(s, a)
 
     def save(self):
-        save = tf.train.Saver()
-        save.save(self.sess, 'params', write_meta_graph=False)
-
-
-    def restor(self):
         saver = tf.train.Saver()
-        saver.restore(self.sess, 'params')
+        saver.save(self.sess, './save/model.ckpt', write_meta_graph=False)
+
+
+    def restore(self):
+        saver = tf.train.Saver()
+        saver.restore(self.sess, './save/model.ckpt')
 
 
 
