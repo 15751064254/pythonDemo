@@ -11,8 +11,8 @@ class ArmEnv(object):
 
     def __init__(self):
         self.arm_info = np.zeros(2, dtype=[('l', np.float32), ('r', np.float32)])
-        self.arm_info['l'] = 100
-        self.arm_info['r'] = np.pi / 6
+        self.arm_info['l'] = 100        # 2 arms length
+        self.arm_info['r'] = np.pi / 6  # 2 angles information
         self.on_goal = 0
 
     def step(self, action):
@@ -103,11 +103,11 @@ class Viewer(pyglet.window.Window):
                 ('v2f', [250, 250,      # location
                         250, 300,
                         260, 300,
-                        260, 250])
+                        260, 250]),
                 ('c3B', (249, 86, 86) * 4))     # color
 
         self.arm2 = self.batch.add(
-                4, pyglet.gl.GLQUADS, None,
+                4, pyglet.gl.GL_QUADS, None,
                 ('v2f', [100, 150,
                         100, 160,
                         200, 160,
@@ -140,15 +140,15 @@ class Viewer(pyglet.window.Window):
         xyl1 = a1xy_ + np.array([np.cos(a1tr), -np.sin(a1tr)]) * self.bar_thc
         xyl2 = a1xy_ + np.array([-np.cos(a1tr), np.sin(a1tr)]) * self.bar_thc
 
-        xyl1_ = a1xy_ + np.array([np.cos(a2tr), -np.sin(a2tr)]) * self.bar_thc
-        xyl2_ = a1xy_ + np.array([-np.cos(a2tr), np.sin(a2tr)]) * self.bar_thc
+        xy11_ = a1xy_ + np.array([np.cos(a2tr), -np.sin(a2tr)]) * self.bar_thc
+        xy12_ = a1xy_ + np.array([-np.cos(a2tr), np.sin(a2tr)]) * self.bar_thc
 
         xy21 = a2xy_ + np.array([-np.cos(a2tr), np.sin(a2tr)]) * self.bar_thc
         xy22 = a2xy_ + np.array([np.cos(a2tr), -np.sin(a2tr)]) * self.bar_thc
 
 
         self.arm1.vertices = np.concatenate((xy01, xy02, xyl1, xyl2))
-        self.arm2.vertices = np.concatenate((xyl1_, xyl2_, xy21, xy22))
+        self.arm2.vertices = np.concatenate((xy11_, xy12_, xy21, xy22))
 
 if __name__ == '__main__':
     env = ArmEnv()
