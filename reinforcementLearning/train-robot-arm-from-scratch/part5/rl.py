@@ -5,7 +5,7 @@ LR_A = 0.001    # learning rate for actor
 LR_C = 0.001    # learning rate for critic
 GAMMA = 0.9     # reward discount
 TAU = 0.1       # soft replacement
-MEMORT_CAPACITY = 10000
+MEMORY_CAPACITY = 10000
 BATCH_SIZE = 32
 
 class DDPG(object):
@@ -55,18 +55,18 @@ class DDPG(object):
 
 
     def learn(self):
-    # soft target replacement
-    self.sess.run(self.soft_replace)
+        # soft target replacement
+        self.sess.run(self.soft_replace)
 
-    indices = np.random.choice(MEMORY_CAPACITY, size=BATCH_SIZE)
-    bt = self.memory[ndices, :]
-    bs = bt[:, :self.s_dim]
-    ba = bt[:, self.s_dim: self.s_dim + self.a_dim]
-    br = bt[:, -self.s_dim -1: -self.s_dim]
-    bs_ = bt[:, -self.s_dim:]
+        indices = np.random.choice(MEMORY_CAPACITY, size=BATCH_SIZE)
+        bt = self.memory[ndices, :]
+        bs = bt[:, :self.s_dim]
+        ba = bt[:, self.s_dim: self.s_dim + self.a_dim]
+        br = bt[:, -self.s_dim -1: -self.s_dim]
+        bs_ = bt[:, -self.s_dim:]
 
-    self.sess.run(self.atrain, {self.S: bs})
-    self.sess.run(self.ctrain, {self.S: bs, self.a: ba, self.R: br, self.S_: bs_})
+        self.sess.run(self.atrain, {self.S: bs})
+        self.sess.run(self.ctrain, {self.S: bs, self.a: ba, self.R: br, self.S_: bs_})
 
     def store_transition(self, s, a, r, s_):
         transition = np.hstack((s, a, [r], s_))

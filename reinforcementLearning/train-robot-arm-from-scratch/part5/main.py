@@ -46,7 +46,7 @@ def eval():
     env.viewer.set_vsync(True)
     while True:
         s = env.reset()
-        for _ in range(200)
+        for _ in range(200):
             env.render()
             a = rl.choose_action(s)
             s, r, done = env.step(a)
