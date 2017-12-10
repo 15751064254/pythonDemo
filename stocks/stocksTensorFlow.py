@@ -8,7 +8,7 @@ b = tf.placeholder(dtype=tf.int8)
 c = tf.add(a, b)
 
 # Initialize the graph
-graph = tf.Session()
+session = tf.Session()
 
 # Run the graph
-graph.run(c, feed_dict={a: 5, b: 4})
+session.run(c, feed_dict={a: 5, b: 4})
