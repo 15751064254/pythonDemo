@@ -14,8 +14,8 @@ from tensorflow.python.client import timeline
 FLAGS = None
 
 def main(_):
-    # Improt data
-    mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+    # Import data
+    mnist = input_data.read_data_sets(FLAGS.data_dir)
 
     # Create the model
     x = tf.placeholder(tf.float32, [None, 784])
@@ -24,17 +24,19 @@ def main(_):
     y = tf.matmul(x, w) + b
 
     # Define loss and optimizer
-    y_ = tf.placeholder(tf.float32, [None, 10])
+    y_ = tf.placeholder(tf.int64, [None])
 
     # The raw formulation of cross-entropy,
 
     # tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(tf.nn.softmax(y)),
     #                              reduction_indices=[1]))
-    can he numerically nustable.
+
+    # can be numerically unstable.
+
 
     # So here we use tf.losses.sparse_softmax_cross_entropy on the raw
-    # logit outputs of 'y', and the average across the batch.
-    cross_entropy = tf.losses.spare_softmax_cross_entropy(labels=y_, logits=y)
+    # logit outputs of 'y', and then average across the batch.
+    cross_entropy = tf.losses.spares_softmax_cross_entropy(labels=y_, logits=y)
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
     config = tf.ConfigProto()
@@ -66,8 +68,41 @@ def main(_):
                 run_metadata=run_metadata
             )
             trace = timeline.Timeline(step_stats=run_metadata.step_stats)
-            with open('timeline.ctf.json', w) as trace_file:
+            with open('timeline.ctf.json', 'w') as trace_file:
                 trace_file.write(trace.generate_chrome_trace_format())
 
         else:
-            sess.run(train_step, )
+            sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+
+
+    # Test trained model
+    correct_prediction = tf.equal(tf.argmax(y, 1), y_)
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    print(sess.run(accuracy,
+                    feed_dict={
+                        x: mnist.test.images,
+                        y_: mnist.test.labels
+                    }))
+
+    sess.close()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--data_dir',
+        type=str,
+        default='./tensorflow/mnist/input_data',
+        help='Directory for storing input data'
+    )
+
+    parser.add_argument(
+        '--xla',
+        type=bool,
+        default=True,
+        help='Turn xla via JIT on'
+    )
+
+    FLAGS, unparsed = parser.parse_known_args()
+    tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
+
