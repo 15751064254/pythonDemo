@@ -75,6 +75,72 @@ def do_eval(sess,
             images_placeholder,
             labels_placeholder,
             data_set):
+    """ Runs one evaluation against the full epoch of data.
+
+    Args:
+        sess: The session in which the model has been trained.
+        eval_correct: The Tensor that returns the number of correct predictions.
+        images_placeholder: The image placeholder.
+        labels_placeholder: The labels placeholder.
+        data_set: The set of images and labels to evaluate, form imput_data.read_data_sets().
+    """
+    # And run one epoch of eval.
+    true_count = 0  # Counts the number of correct predictions.
+    steps_pre_epoch = data_set.num_examples     // FLAGS.batch_szie
+    num_examples = steps_pre_epoch * FLAGS.batch_size
+    for step in xrange(steps_per_epoch):
+        feed_dict = fill_feed_dict(data_set,
+                                    images_placeholder,
+                                    labels_placeholder)
+        true_count += sess.run(eval_correct, feed_dict=feed_dict)
+    precision = float(true_count) / num_examples
+    print(' Num examples: %d Num correct: %d Precision @ 1: %0.04f' % 
+            num_examples, true_count, precision)
+
+
+def run_training():
+    """ Train MNIST for a number of steps."""
+    # Get the sets of images and labels for training, validation, and
+    # test on MNIST.
+    data_sets =  input_data.read_data_sets(FLAGS.input_data_dir, FLAGS.fake_data)
+    # Tell TensorFlow that the model will be built into the default Graph.
+    with tf.Graph().as_default():
+        # Generate placeholders for the images and labels.
+        images_placeholder, labels_placeholder = placeholder_inputs(
+            FLAGS.batch_size)
+        # Build a Graph that computes predictions from the inference model.
+        logits = mnist.inference(images_placeholder,
+                                    FLAGS.hidden1,
+                                    FLAGS.hidden2)
+        # Add to the Graph the Ops for loss calculation.
+        loss = mnist.loss(logits, labels_placeholder)
+
+        # Add the Op to comper the logits to the labels during evaluation.
+        eval_correct = mnist.evaluation(logits, labels_placeholder)
+
+        # Build the summary Tensor based on the TF collection of Summaries.
+        summary = tf.summary.merge_all()
+
+        # Add the variable initializer Op.
+        init = tf.global_variables_initializer()
+
+        # Create a save for writing training checkpoints.
+        saver = tf.train.Saver()
+
+        # Create a session for running Ops on the Graph.
+        sess = tf.Session()
+
+        # Instantiate a SummaryWriter to output summaries and the Graph.
+        summary_writer = tf.summary.FileWriter(FLAGS.log_dir, sess.graph)
+
+        # Run the Op to initialize the variable.
+        sess.run(init)
+
+        # Start the training loop.
+        for step in xrange(FLAGS.max_steps):
+            start_time = time.time()
+
+            # Fill 
 
 
 
