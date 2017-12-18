@@ -36,7 +36,7 @@ def main(_):
 
     # So here we use tf.losses.sparse_softmax_cross_entropy on the raw
     # logit outputs of 'y', and then average across the batch.
-    cross_entropy = tf.losses.spares_softmax_cross_entropy(labels=y_, logits=y)
+    cross_entropy = tf.losses.sparse_softmax_cross_entropy(labels=y_, logits=y)
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
     config = tf.ConfigProto()
