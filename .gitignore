@@ -1,0 +1,15 @@
+# Python:
+*.csv
+*.zip
+*.gz
+*.json
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+.idea
+dist
+build
+input_data
+logs
+save
