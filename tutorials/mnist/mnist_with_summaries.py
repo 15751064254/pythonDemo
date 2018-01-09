@@ -118,7 +118,8 @@ def train():
     tf.summary.scalar('cross_entropy', cross_entropy)
 
     with tf.name_scope('train'):
-        train_step = tf.train.AdamOptimizer(FLAGS.learning_rate).minimize(cross_entropy)
+        train_step = tf.train.AdamOptimizer(FLAGS.learning_rate).minimize(
+            cross_entropy)
 
 
     with tf.name_scope('accuracy'):
@@ -198,45 +199,39 @@ if __name__ == '__main__':
         const=True,
         type=bool,
         default=False,
-        help='If true, uses fake data for unit testing.'
-    )
+        help='If true, uses fake data for unit testing.')
 
     parser.add_argument(
         '--max_steps',
         type=int,
         default=1000,
-        help='Number of steps to run trainer.'
-    )
+        help='Number of steps to run trainer.')
 
     parser.add_argument(
         '--learning_rate',
         type=float,
         default=0.001,
-        help='Initial learning rate'
-    )
+        help='Initial learning rate')
 
     parser.add_argument(
         '--dropout',
         type=float,
         default=0.9,
-        help='Keep probability for training dropout.'
-    )
+        help='Keep probability for training dropout.')
 
     parser.add_argument(
         '--data_dir',
         type=str,
         default=os.path.join(os.getenv('TEST_TMPDIR', './'),
                                 'tensorflow/mnist/input_data'),
-        help='Directory for storing input data'
-    )
+        help='Directory for storing input data')
 
     parser.add_argument(
         '--log_dir',
         type=str,
         default=os.path.join(os.getenv('TEST_TMPDIR', './'),
                                 'tensorflow/mnist/logs/mnist_with_summaries'),
-        help='Summaries log directory'
-    )
+        help='Summaries log directory')
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

@@ -58,15 +58,11 @@ def main(_):
         # Create a timeline for the last loop and export to json to view with
         # chrome://tracing/.
         if  i == train_loops - 1:
-            sess.run(
-                train_step,
-                feed_dict={
-                    x: batch_xs,
-                    y_: batch_ys
-                },
-                options=tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE),
-                run_metadata=run_metadata
-            )
+            sess.run(train_step,
+                     feed_dict={x: batch_xs,
+                           y_: batch_ys},
+                     options=tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE),
+                     run_metadata=run_metadata)
             trace = timeline.Timeline(step_stats=run_metadata.step_stats)
             with open('timeline.ctf.json', 'w') as trace_file:
                 trace_file.write(trace.generate_chrome_trace_format())
@@ -79,10 +75,8 @@ def main(_):
     correct_prediction = tf.equal(tf.argmax(y, 1), y_)
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     print(sess.run(accuracy,
-                    feed_dict={
-                        x: mnist.test.images,
-                        y_: mnist.test.labels
-                    }))
+                    feed_dict={x: mnist.test.images,
+                               y_: mnist.test.labels}))
 
     sess.close()
 
@@ -93,15 +87,13 @@ if __name__ == '__main__':
         '--data_dir',
         type=str,
         default='./tensorflow/mnist/input_data',
-        help='Directory for storing input data'
-    )
+        help='Directory for storing input data')
 
     parser.add_argument(
         '--xla',
         type=bool,
         default=True,
-        help='Turn xla via JIT on'
-    )
+        help='Turn xla via JIT on')
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

@@ -1,5 +1,5 @@
 # Python:
-#*.csv
+*.csv
 *.zip
 *.gz
 *.json
