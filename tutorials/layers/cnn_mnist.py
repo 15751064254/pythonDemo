@@ -138,7 +138,8 @@ def main(unused_argv):
 
     mnist_classifier.train(
         input_fn=train_input_fn,
-        steps=20000,
+        # steps=20000,
+        steps=20,
         hooks=[logging_hook])
 
     # Evaluate the model and print results

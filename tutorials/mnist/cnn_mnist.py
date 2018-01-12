@@ -65,7 +65,7 @@ def cnn_model_fn(features, labels, mode):
     # Output Tensor Shape: [batch_size, 1024]
     dense = tf.layers.dense(inputs=pool2_flat, units=1024, activation=tf.nn.relu)
     # Add dropout operation; 0.6 probability that element will be kept
-    dense = tf.layers.dropout(
+    dropout = tf.layers.dropout(
         inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
 
     # Logits layer
