@@ -54,13 +54,13 @@ def eval():
     env.viewer.set_vsync(True)
     s = env.reset()
     while True:
-        for _ in range(200):
-            env.render()
-            a = rl.choose_action(s)
-            s, r, done = env.step(a)
+#        for _ in range(200):
+        env.render()
+        a = rl.choose_action(s)
+        s, r, done = env.step(a)
 #            if done:
 #                break
-#
+
 
 if ON_TRAIN:
     train()

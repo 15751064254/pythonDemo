@@ -31,7 +31,7 @@ class ArmEnv(object):
         # 所以需要计算 finger 的坐标
         (a1l, a2l) = self.arm_info['l']     # radius, arm length
         (a1r, a2r) = self.arm_info['r']     # radian, angle
-        a1xy = np.array([200., 200])        # a1 start (x0, y0)
+        a1xy = np.array([200., 200.])        # a1 start (x0, y0)
         a1xy_ = np.array([np.cos(a1r), np.sin(a1r)]) * a1l + a1xy   # a1 end and a2 start (x1, y1)
         finger = np.array([np.cos(a1r + a2r), np.sin(a1r + a2r)]) * a2l + a1xy_  # a2 end(x2, y2)
 
@@ -59,6 +59,8 @@ class ArmEnv(object):
         return s, r, done
 
     def reset(self):
+        self.goal['x'] = np.random.rand()*400.
+        self.goal['y'] = np.random.rand()*400.
         self.arm_info['r'] = 2 * np.pi * np.random.rand(2)
         self.on_goal = 0
         (a1l, a2l) = self.arm_info['l']     # radius, arm length
@@ -159,8 +161,7 @@ class Viewer(pyglet.window.Window):
             self.goal_info['x'] - self.goal_info['l']/2, self.goal_info['y'] - self.goal_info['l']/2,
             self.goal_info['x'] + self.goal_info['l']/2, self.goal_info['y'] - self.goal_info['l']/2,
             self.goal_info['x'] + self.goal_info['l']/2, self.goal_info['y'] + self.goal_info['l']/2,
-            self.goal_info['x'] - self.goal_info['l']/2, self.goal_info['y'] + self.goal_info['l']/2,
-        )
+            self.goal_info['x'] - self.goal_info['l']/2, self.goal_info['y'] + self.goal_info['l']/2)
 
         # update arm
         (a1l, a2l) = self.arm_info['l']     # radius, arm length

@@ -4,10 +4,12 @@
 import tensorflow as tf
 import numpy as np
 
+#####################  hyper parameters  ####################
+
 LR_A = 0.001    # learning rate for actor
 LR_C = 0.001    # learning rate for critic
 GAMMA = 0.9     # reward discount
-TAU = 0.01       # soft replacement
+TAU = 0.01      # soft replacement
 MEMORY_CAPACITY = 30000
 BATCH_SIZE = 32
 
@@ -39,7 +41,7 @@ class DDPG(object):
         self.ae_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Actor/eval')
         self.at_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Actor/target')
         self.ce_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Critic/eval')
-        self.ct_params = tf.get_collection(tf.GraphKeys. GLOBAL_VARIABLES, scope='Critic/target')
+        self.ct_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='Critic/target')
 
         # target net replacement
         self.soft_replace = [[tf.assign(ta, (1 - TAU) * ta + TAU * ea), tf.assign(tc, (1 - TAU) * tc + TAU * ec)] 
@@ -105,6 +107,4 @@ class DDPG(object):
     def restore(self):
         saver = tf.train.Saver()
         saver.restore(self.sess, './save/model.ckpt')
-
-
 
