@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# vim: set fileencoding=utf-8:
+
 import tensorflow as tf
 import numpy as np
 
@@ -92,10 +95,12 @@ class DDPG(object):
             net = tf.nn.relu(tf.matmul(s, w1_s) + tf.matmul(a, w1_a) + b1)
             return tf.layers.dense(net, 1, trainable=trainable) # Q(s, a)
 
+    # 保存功能
     def save(self):
         saver = tf.train.Saver()
         saver.save(self.sess, './save/model.ckpt', write_meta_graph=False)
 
+    # 提取功能
     def restore(self):
         saver = tf.train.Saver()
         saver.restore(self.sess, './save/model.ckpt')
