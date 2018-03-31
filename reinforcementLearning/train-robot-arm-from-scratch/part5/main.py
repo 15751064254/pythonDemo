@@ -6,7 +6,7 @@ from env import ArmEnv
 from rl import DDPG
 
 # 设置全局变量
-MAX_EPISODES = 500
+MAX_EPISODES = 900
 MAX_EP_STEPS = 200
 # ON_TRAIN = True
 ON_TRAIN = False
@@ -52,15 +52,15 @@ def eval():
     rl.restore()    # 提取网络
     env.render()
     env.viewer.set_vsync(True)
+    s = env.reset()
     while True:
-        s = env.reset()
         for _ in range(200):
             env.render()
             a = rl.choose_action(s)
             s, r, done = env.step(a)
-            if done:
-                break
-
+#            if done:
+#                break
+#
 
 if ON_TRAIN:
     train()

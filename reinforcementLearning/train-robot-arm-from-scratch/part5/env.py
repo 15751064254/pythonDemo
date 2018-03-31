@@ -154,7 +154,7 @@ class Viewer(pyglet.window.Window):
 
     # 更新手臂的位置信息
     def _update_arm(self):
-        # update gola
+        # update goal
         self.goal.vertices = (
             self.goal_info['x'] - self.goal_info['l']/2, self.goal_info['y'] - self.goal_info['l']/2,
             self.goal_info['x'] + self.goal_info['l']/2, self.goal_info['y'] - self.goal_info['l']/2,
@@ -174,8 +174,8 @@ class Viewer(pyglet.window.Window):
         xy01 = a1xy + np.array([-np.cos(a1tr), np.sin(a1tr)]) * self.bar_thc
         xy02 = a1xy + np.array([np.cos(a1tr), -np.sin(a1tr)]) * self.bar_thc
 
-        xyl1 = a1xy_ + np.array([np.cos(a1tr), -np.sin(a1tr)]) * self.bar_thc
-        xyl2 = a1xy_ + np.array([-np.cos(a1tr), np.sin(a1tr)]) * self.bar_thc
+        xy11 = a1xy_ + np.array([np.cos(a1tr), -np.sin(a1tr)]) * self.bar_thc
+        xy12 = a1xy_ + np.array([-np.cos(a1tr), np.sin(a1tr)]) * self.bar_thc
 
         # 第二段手臂的4个点信息
         xy11_ = a1xy_ + np.array([np.cos(a2tr), -np.sin(a2tr)]) * self.bar_thc
@@ -186,7 +186,7 @@ class Viewer(pyglet.window.Window):
 
 
         # 将点信息都放入手臂显示中
-        self.arm1.vertices = np.concatenate((xy01, xy02, xyl1, xyl2))
+        self.arm1.vertices = np.concatenate((xy01, xy02, xy11, xy12))
         self.arm2.vertices = np.concatenate((xy11_, xy12_, xy21, xy22))
 
     # convert the mouse coordinate to goal's coordinate
