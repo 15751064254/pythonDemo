@@ -88,7 +88,6 @@ class Viewer(pyglet.window.Window):
         self.arm_info = arm_info
         self.center_coord = np.array([200, 200])
 
-
         self.batch = pyglet.graphics.Batch()    # display whole batch at once
         self.goal = self.batch.add(
                 4, pyglet.gl.GL_QUADS, None,    # 4 corners

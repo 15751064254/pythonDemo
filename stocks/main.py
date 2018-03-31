@@ -10,6 +10,9 @@ MAX_EP_STEPS = 200
 
 # set env
 env = Env()
+s_dim = env.state_dim
+a_dim = env.action_dim
+a_bound = env.action_bound
 
 # set rl
 rl = DDPG()
