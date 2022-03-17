@@ -21,6 +21,8 @@ a_bound = env.action_bound
 rl = DDPG(a_dim, s_dim, a_bound)
 
 steps = []
+
+
 def train():
     # start training
     for i in range(MAX_EPISODES):
@@ -41,7 +43,7 @@ def train():
                 rl.learn()
 
             s = s_
-            if done or j == MAX_EP_STEPS-1:
+            if done or j == MAX_EP_STEPS - 1:
                 print('Ep: %i | %s | ep_r: %.1f | step: %i' % (i, '---' if not done else 'done', ep_r, j))
                 break
     rl.save()
@@ -62,4 +64,3 @@ if ON_TRAIN:
     train()
 else:
     eval()
-

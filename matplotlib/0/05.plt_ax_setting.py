@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 x = np.linspace(-3, 3, 50)
-y1 = 2*x + 1
-y2 = x**2
+y1 = 2 * x + 1
+y2 = x ** 2
 
 plt.figure()
 plt.plot(x, y2)
@@ -31,7 +31,7 @@ plt.xticks(new_ticks)
 
 # set tick labels
 plt.yticks([-2, -1.8, -1, 1.22, 3],
-            [r'$really\ bad$', r'$bad\ \alpha$', r'$normal\ alpha$', r'$good$', r'$reall\ good$'])
+           [r'$really\ bad$', r'$bad\ \alpha$', r'$normal\ alpha$', r'$good$', r'$reall\ good$'])
 # to use '$ $' for math text and nice looking, e.g. '$\pi$'
 
 plt.show()
